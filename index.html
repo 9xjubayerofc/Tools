@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MR.GHOST VIP • Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#05070a;
+  --panel:#0f172a;
+  --card:rgba(15, 23, 42, 0.85);
+  --border:rgba(37, 99, 235, 0.3);
+  --blue:#2563eb;
+  --cyan:#00d2ff;
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+body{
+  margin:0;
+  font-family: 'Inter', sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x: hidden;
+}
+
+#particles-js {
+  position: fixed;
+  width: 100%; height: 100%;
+  z-index: -1; top: 0; left: 0;
+}
+
+header{
+  padding:25px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--blue);
+  font-family: 'Orbitron', sans-serif;
+  font-weight:700;
+  text-align:center;
+  font-size:22px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+}
+
+.social-links{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:15px 0;
+  flex-wrap:wrap;
+  position: relative;
+  z-index: 10;
+}
+.social-links a{
+  padding:8px 15px;
+  border-radius:10px;
+  text-decoration:none;
+  color:#fff;
+  font-weight:600;
+  font-size:13px;
+  transition:.3s;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.telegram{background:#26a5e4; box-shadow: 0 4px 15px rgba(38, 165, 228, 0.3);}
+.youtube{background:#ff0000; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);}
+.tiktok{background:#000; border: 1px solid #fff !important;}
+
+.container{
+  max-width:600px;
+  margin:auto;
+  padding:10px 20px 100px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Tab Navigation */
+.nav-menu {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.05);
+  padding: 8px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
+}
+.nav-item {
+  flex: 1;
+  min-width: 100px;
+  padding: 12px 5px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 10px;
+  transition: .3s;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.nav-item.active {
+  background: var(--blue);
+  color: white;
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card{
+  background:var(--card);
+  border: 1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+  backdrop-filter: blur(12px);
+  margin-bottom: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h3{
+  margin:0 0 15px;
+  font-size:14px;
+  color:var(--cyan);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input,textarea,button,select{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(2, 6, 23, 0.8);
+  color:var(--text);
+  font-size:14px;
+  transition: .3s;
+}
+input:focus { border-color: var(--cyan); box-shadow: 0 0 8px rgba(0, 210, 255, 0.2); }
+textarea{resize:none; height:90px}
+
+button{
+  background: var(--blue);
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white;
+}
+button:active { transform: scale(0.97); }
+button.red{background: linear-gradient(45deg, #ef4444, #991b1b);}
+button.green{background: linear-gradient(45deg, #22c55e, #166534);}
+
+/* Global Auth Fields - Shared across tabs */
+.auth-box { margin-bottom: 15px; }
+
+pre{
+  background:rgba(0, 0, 0, 0.8);
+  padding:15px;
+  border-radius:12px;
+  border-left: 4px solid var(--cyan);
+  overflow:auto;
+  font-size:13px;
+  color: #00ffaa;
+  font-family: 'Courier New', monospace;
+}
+
+.menu-toggle {
+    position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px;
+    background: var(--blue); border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; color: white;
+    font-size: 22px; cursor: pointer; z-index: 1000; box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
+}
+.cyber-panel {
+    position: fixed; top: 90px; right: -300px; width: 260px;
+    background: rgba(10, 15, 20, 0.98); padding: 25px; border-radius: 20px;
+    backdrop-filter: blur(20px); border: 1px solid var(--border);
+    z-index: 999; transition: 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.cyber-panel.active { right: 25px; }
+.color-dots-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 10px; }
+.color-dot { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.color-dot.active { border-color: #fff; box-shadow: 0 0 10px currentColor; }
+.setting-label { font-size: 11px; color: var(--cyan); text-transform: uppercase; margin: 15px 0 5px; display: block; }
+
+footer{
+  text-align:center; padding:20px;
+  color:var(--muted); font-size:12px;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<header>💀 MR.GHOST VIP TOOL</header>
+
+<div class="social-links">
+  <a href="https://t.me/mr_ghost34" target="_blank" class="telegram"><i class="fab fa-telegram"></i> Telegram</a>
+  <a href="https://youtube.com/@mr.ghost-34" target="_blank" class="youtube"><i class="fab fa-youtube"></i> YouTube</a>
+  <a href="https://www.tiktok.com/@9x_jubayer_" target="_blank" class="tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+</div>
+
+<div class="container">
+  
+  <div class="card auth-box">
+    <h3><i class="fas fa-user-shield"></i> Master Login</h3>
+    <input id="uid" placeholder="User UID">
+    <input id="pass" type="password" placeholder="Password">
+    <input id="token" placeholder="Access Token">
+  </div>
+
+  <div class="nav-menu">
+    <div class="nav-item active" onclick="switchTab('friend-tab', this)"><i class="fas fa-users"></i> FRIENDS</div>
+    <div class="nav-item" onclick="switchTab('guild-tab', this)"><i class="fas fa-fort-awesome"></i> GUILD</div>
+    <div class="nav-item" onclick="switchTab('tools-tab', this)"><i class="fas fa-tools"></i> TOOLS</div>
+    <div class="nav-item" onclick="switchTab('bio-tab', this)"><i class="fas fa-pen"></i> BIO</div>
+  </div>
+
+  <div id="friend-tab" class="tab-content active">
+    <div class="card">
+      <h3><i class="fas fa-user-plus"></i> Friend Manager</h3>
+      <input id="friend_uid" placeholder="Friend UID">
+      <button onclick="friendList()">View Friend List</button>
+      <button onclick="addFriend()">Send Friend Request</button>
+      <button class="red" onclick="removeFriend()">Remove Friend</button>
+    </div>
+  </div>
+
+  <div id="guild-tab" class="tab-content">
+    <div class="card">
+      <h3><i class="fas fa-castle"></i> Guild Manager</h3>
+      <input id="guild_id" placeholder="Guild ID">
+      <input id="guild_region" placeholder="Region (IND/BD)">
+      <button onclick="guildInfo()">Check Guild Info</button>
+      <button class="green" onclick="guildJoin()">Join Guild</button>
+      <button class="red" onclick="guildLeave()">Leave Guild</button>
+      <button onclick="guildMembers()">Members List</button>
+    </div>
+  </div>
+
+  <div id="tools-tab" class="tab-content">
+    <div class="card">
+      <h3><i class="fas fa-search"></i> Checkers</h3>
+      <input id="ban_uid" placeholder="Enter UID for Ban Check">
+      <button class="red" onclick="checkBan()">Run Ban Check</button>
+      <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
+      <input id="level_uid" placeholder="Enter UID for Level Info">
+      <button class="green" onclick="levelInfo()">Check Level Info</button>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-chart-bar"></i> Account Stats</h3>
+      <input id="info_uid" placeholder="Enter UID">
+      <select id="mode">
+        <option value="BR">BR Mode</option>
+        <option value="CS">CS Mode</option>
+      </select>
+      <select id="type">
+        <option value="NORMAL">NORMAL</option>
+        <option value="RANKED">RANKED</option>
+        <option value="CAREER">CAREER</option>
+      </select>
+      <button onclick="getInfo()">Get Stats Now</button>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-key"></i> Token & Name</h3>
+      <input id="eat_token" placeholder="EAT Token">
+      <button onclick="generateToken()">Convert EAT to Access</button>
+      <input id="new_nick" placeholder="New Nickname" style="margin-top:20px;">
+      <button class="green" onclick="changeName()">Confirm Name Change</button>
+    </div>
+  </div>
+
+  <div id="bio-tab" class="tab-content">
+    <div class="card">
+      <h3><i class="fas fa-edit"></i> Update BIO</h3>
+      <textarea id="bio" placeholder="[FF0000]YOUTUBE:@mr.ghost-34"></textarea>
+      <button class="green" onclick="updateBio()">Update Bio Now</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><i class="fas fa-terminal"></i> Console Output</h3>
+    <pre id="out">System Online. Ready for command.</pre>
+  </div>
+</div>
+
+<div class="menu-toggle" onclick="toggleMenu()">
+    <i class="fa-solid fa-sliders" id="menuIcon"></i>
+</div>
+
+<div class="cyber-panel" id="sidePanel">
+    <div style="color: #fff; font-size: 14px; font-weight:bold; text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px;">UI CONFIG</div>
+    <span class="setting-label">Theme Color</span>
+    <div class="color-dots-container">
+        <div class="color-dot active" style="background: #2563eb; color: #2563eb;" onclick="changeHue('#2563eb', this)"></div>
+        <div class="color-dot" style="background: #ff004c; color: #ff004c;" onclick="changeHue('#ff004c', this)"></div>
+        <div class="color-dot" style="background: #00ff00; color: #00ff00;" onclick="changeHue('#00ff00', this)"></div>
+        <div class="color-dot" style="background: #ff00ff; color: #ff00ff;" onclick="changeHue('#ff00ff', this)"></div>
+        <div class="color-dot" style="background: #ffff00; color: #ffff00;" onclick="changeHue('#ffff00', this)"></div>
+    </div>
+    <span class="setting-label">Particle Size</span>
+    <input type="range" id="pSize" min="2" max="20" value="5" oninput="updateSize(this.value)">
+    <span class="setting-label">Flow Speed</span>
+    <input type="range" id="pSpeed" min="1" max="10" value="3" oninput="updateSpeed(this.value)">
+</div>
+
+<footer>CREDIT • MR. GHOST &nbsp;&nbsp;|&nbsp;&nbsp; DEVELOPER • GHOST</footer>
+
+<script src="https://pl28664877.effectivegatecpm.com/9b/09/14/9b0914dde54e0f75462c782bc760cb71.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+// Tab Switching
+function switchTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+}
+
+// API Config
+const API={
+  friend:"https://danger-friend-manager.vercel.app",
+  bio:"https://danger-long-bio.vercel.app/update_bio",
+  eat:"https://danger-access-token.vercel.app/eat-to-access",
+  guild_base:"https://guild-info-danger.vercel.app",
+  ban: "http://danger-ban-check.vercel.app/bancheck",
+  stats: "http://danger-player-stats.vercel.app/STATS",
+  nameChange: "https://danger-change-nickname.vercel.app/change-name",
+  level: "https://danger-level-info.vercel.app/level"
+};
+
+const out = d => {
+  const el = document.getElementById("out");
+  el.textContent = typeof d==="string" ? d : JSON.stringify(d,null,2);
+};
+
+const baseAuth = () => ({
+  uid: document.getElementById("uid").value,
+  password: document.getElementById("pass").value,
+  access_token: document.getElementById("token").value
+});
+
+async function req(url, p){
+  out("🚀 Sending Request...");
+  try{
+    const query = p ? "?" + new URLSearchParams(p) : "";
+    const r = await fetch(url + query);
+    const t = await r.text();
+    try { out(JSON.parse(t)); } catch { out(t); }
+  }catch(e){
+    out({error:"Failed", detail:e.toString()});
+  }
+}
+
+// Logic Functions
+function friendList(){ req(API.friend+"/get_friends_list", baseAuth()); }
+function addFriend(){ req(API.friend+"/adding_friend", {...baseAuth(), friend_uid: document.getElementById("friend_uid").value}); }
+function removeFriend(){ req(API.friend+"/remove_friend", {...baseAuth(), friend_uid: document.getElementById("friend_uid").value}); }
+
+function guildInfo(){
+    req(`${API.guild_base}/guild`, {
+        guild_id: document.getElementById("guild_id").value,
+        region: document.getElementById("guild_region").value
+    });
+}
+function guildJoin(){
+    const a = baseAuth();
+    const p = { guild_id: document.getElementById("guild_id").value };
+    if(a.access_token) p.access_token = a.access_token; else { p.uid = a.uid; p.password = a.password; }
+    req(`${API.guild_base}/join`, p);
+}
+function guildLeave(){
+    const a = baseAuth();
+    const p = { guild_id: document.getElementById("guild_id").value };
+    if(a.access_token) p.access_token = a.access_token; else { p.uid = a.uid; p.password = a.password; }
+    req(`${API.guild_base}/leave`, p);
+}
+function guildMembers(){
+    const a = baseAuth();
+    const p = { guild_id: document.getElementById("guild_id").value };
+    if(a.access_token) p.access_token = a.access_token; else { p.uid = a.uid; p.password = a.password; }
+    req(`${API.guild_base}/members`, p);
+}
+
+function updateBio(){ req(API.bio, {...baseAuth(), bio: document.getElementById("bio").value}); }
+function checkBan(){ req(API.ban, {uid: document.getElementById("ban_uid").value}); }
+function levelInfo(){ req(`${API.level}/${document.getElementById("level_uid").value}`); }
+function generateToken(){ req(API.eat, {...baseAuth(), eat_token: document.getElementById("eat_token").value}); }
+function getInfo(){
+  const m = document.getElementById("mode").value;
+  const t = document.getElementById("type").value;
+  req(`${API.stats}/${m}/${t}`, {uid: document.getElementById("info_uid").value, key: "DANGERxSTATS"});
+}
+function changeName(){ 
+  const a = baseAuth();
+  req(API.nameChange, { uid: a.uid, password: a.password, nickname: document.getElementById("new_nick").value }); 
+}
+
+// Animation Control
+let pConfig = { color: "#2563eb", size: 4, speed: 2 };
+function toggleMenu() {
+    const panel = document.getElementById('sidePanel');
+    document.getElementById('menuIcon').className = panel.classList.toggle('active') ? "fa-solid fa-xmark" : "fa-solid fa-sliders";
+}
+function changeHue(c, el) {
+    pConfig.color = c;
+    document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+    el.classList.add('active');
+    loadParticles();
+}
+function updateSize(v) { pConfig.size = parseInt(v); loadParticles(); }
+function updateSpeed(v) { pConfig.speed = parseInt(v); loadParticles(); }
+
+function loadParticles() {
+    particlesJS('particles-js', {
+        "particles": {
+            "number": { "value": 60 },
+            "color": { "value": pConfig.color },
+            "shape": { "type": "circle" },
+            "size": { "value": pConfig.size, "random": true },
+            "line_linked": { "enable": true, "color": pConfig.color, "opacity": 0.2 },
+            "move": { "enable": true, "speed": pConfig.speed }
+        },
+        "interactivity": { "events": { "onhover": { "enable": true, "mode": "repulse" } } }
+    });
+}
+loadParticles();
+</script>
+</body>
+</html>
